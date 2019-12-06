@@ -1,38 +1,26 @@
 <template>
-  <el-dialog title="设备详情" :visible.sync="visible" :before-close="modalClose" :close="modalClose" @close="detailActiveTab='first'" width="640px" top="50px">
+  <el-dialog title="设备详情" :visible.sync="visible" :before-close="modalClose" :close="modalClose" @close="detailActiveTab = 'first'" width="640px" top="50px">
     <h3 class="detail-base-title">基本信息</h3>
     <ul class="deatil-list">
-      <li><span>设备名称：</span>{{detailData.machineName}}</li>
-      <li><span>所属店铺：</span>{{detailData.shopName}}</li>
-      <li><span>设备类型：</span>{{detailData.parentTypeName}}</li>
-      <li><span>设备型号：</span>{{detailData.subTypeName}}</li>
-      <li><span>通信类型：</span>{{detailData.communicateType | communicateType}}</li>
-      <li><span>公司：</span>{{detailData.company}}</li>
-      <li><span>NQT：</span>{{detailData.nqt}}</li>
-      <li><span>IMEI：</span>{{detailData.imei}}</li>
-      <li><span>创建人：</span>{{detailData.createUser}}</li>
-      <li><span>创建时间：</span>{{detailData.createTime}}</li>
+      <li><span>设备名称：</span>{{ detailData.machineName }}</li>
+      <li><span>所属店铺：</span>{{ detailData.shopName }}</li>
+      <li><span>设备类型：</span>{{ detailData.parentTypeName }}</li>
+      <li><span>设备型号：</span>{{ detailData.subTypeName }}</li>
+      <li><span>通信类型：</span>{{ detailData.communicateType | communicateType }}</li>
+      <li><span>公司：</span>{{ detailData.company }}</li>
+      <li><span>NQT：</span>{{ detailData.nqt }}</li>
+      <li><span>IMEI：</span>{{ detailData.imei }}</li>
+      <li><span>创建人：</span>{{ detailData.createUser }}</li>
+      <li><span>创建时间：</span>{{ detailData.createTime }}</li>
     </ul>
     <h3 class="detail-base-title" style="border:none">功能属性</h3>
     <el-tabs v-model="detailActiveTab">
       <el-tab-pane label="功能设置" name="first">
-        <div v-if="detailData.parentTypeName === '饮水机'&&isBoiledWater(detailData.support)||detailData.parentTypeName === '淋浴'&&isBoiledWater(detailData.support)">
-          <el-table :data="detailData.functionList" style="width: 100%">
-            <el-table-column prop="functionName" :label="detailData.configVO.name.title" v-if="detailData.configVO.name.available"></el-table-column>
-            <el-table-column prop="needMinutes" :label="detailData.configVO.time.title" v-if="detailData.configVO.time.available"></el-table-column>
-            <el-table-column prop="functionPrice" :label="detailData.configVO.price.title" v-if="detailData.configVO.price.available"></el-table-column>
-            <el-table-column prop="ifOpen" :label="detailData.configVO.open.title" v-if="detailData.configVO.open.available" header-align="right" align="right">
-              <template slot-scope="scope">
-                <span>{{scope.row.ifOpen | ifOpenType}}</span>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
         <div v-if="detailData.isQuantifyCharge === 1">
           <ul class="deatil-list charge-base">
-            <li><span class="charge-base">可选时间范围：</span>{{detailData.extraAttr.min || ''}}-{{detailData.extraAttr.max || ''}}小时</li>
-            <li><span class="charge-base">单位刻度时间：</span>{{detailData.extraAttr.step || ''}}小时</li>
-            <li><span class="charge-base">推荐充电时间：</span>{{detailData.extraAttr.default || ''}}小时</li>
+            <li><span class="charge-base">可选时间范围：</span>{{ detailData.extraAttr.min || '' }}-{{ detailData.extraAttr.max || '' }}小时</li>
+            <li><span class="charge-base">单位刻度时间：</span>{{ detailData.extraAttr.step || '' }}小时</li>
+            <li><span class="charge-base">推荐充电时间：</span>{{ detailData.extraAttr.default || '' }}小时</li>
             <li></li>
           </ul>
           <div class="charge-control">
@@ -47,37 +35,28 @@
             </h2>
             <ul>
               <li>
-                <span>低功率 1-{{detailData.extraAttr.power1}}</span>
-                <span style="float:right">{{detailData.extraAttr.ratio1}}</span>
+                <span>低功率 1-{{ detailData.extraAttr.power1 }}</span>
+                <span style="float:right">{{ detailData.extraAttr.ratio1 }}</span>
               </li>
               <li>
-                <span>中功率 {{detailData.extraAttr.power1?detailData.extraAttr.power1+1:''}}-{{detailData.extraAttr.power2}}</span>
-                <span style="float:right">{{detailData.extraAttr.ratio2}}</span>
+                <span>中功率 {{ detailData.extraAttr.power1 ? detailData.extraAttr.power1 + 1 : '' }}-{{ detailData.extraAttr.power2 }}</span>
+                <span style="float:right">{{ detailData.extraAttr.ratio2 }}</span>
               </li>
               <li>
-                <span>高功率 {{detailData.extraAttr.power2?detailData.extraAttr.power2+1:''}}-{{detailData.extraAttr.power3}}</span>
-                <span style="float:right">{{detailData.extraAttr.ratio3}}</span>
+                <span>高功率 {{ detailData.extraAttr.power2 ? detailData.extraAttr.power2 + 1 : '' }}-{{ detailData.extraAttr.power3 }}</span>
+                <span style="float:right">{{ detailData.extraAttr.ratio3 }}</span>
               </li>
             </ul>
           </div>
-          <el-table :data="detailData.functionList" style="width: 100%">
-            <el-table-column prop="functionName" :label="detailData.configVO.name.title" v-if="detailData.configVO.name.available"></el-table-column>
-            <el-table-column prop="functionPrice" align="center" :label="detailData.configVO.price.title" v-if="detailData.configVO.price.available"></el-table-column>
-            <el-table-column prop="ifOpen" header-align="right" align="right" :label="detailData.configVO.open.title" v-if="detailData.configVO.price.available">
-              <template slot-scope="scope">
-                <span>{{scope.row.ifOpen | ifOpenType}}</span>
-              </template>
-            </el-table-column>
-          </el-table>
         </div>
-        <el-table :data="detailData.functionList" style="width: 100%" v-if="isBoiledWater(detailData.support)===false&&detailData.isQuantifyCharge !== 1">
+        <el-table :data="detailData.functionList" style="width: 100%" v-if="detailData.configVO">
           <el-table-column prop="functionName" :label="detailData.configVO.name.title" v-if="detailData.configVO.name.available"></el-table-column>
           <el-table-column prop="needMinutes" :label="detailData.configVO.time.title" v-if="detailData.configVO.time.available"></el-table-column>
           <el-table-column prop="functionPrice" :label="detailData.configVO.price.title" v-if="detailData.configVO.price.available"></el-table-column>
           <el-table-column prop="functionCode" :label="detailData.configVO.pulse.title" v-if="detailData.configVO.pulse.available"></el-table-column>
           <el-table-column prop="ifOpen" :label="detailData.configVO.open.title" v-if="detailData.configVO.open.available">
             <template slot-scope="scope">
-              <span>{{scope.row.ifOpen | ifOpenType}}</span>
+              <span>{{ scope.row.ifOpen | ifOpenType }}</span>
             </template>
           </el-table-column>
         </el-table>
@@ -95,22 +74,12 @@
 
 <script type="text/ecmascript-6">
 import { communicateType, ifOpenType, waterStatus } from '@/utils/mapping';
-import waterMixin from './waterMixin';
 export default {
-  mixins: [waterMixin],
   props: {
     detailData: {
       type: Object,
       default: () => {
-        return {
-          configVO: {
-            extra: {},
-            name: {},
-            open: {},
-            price: {},
-            time: {}
-          }
-        };
+        return {configVO:null}
       }
     },
     visible: {
